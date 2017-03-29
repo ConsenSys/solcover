@@ -30,31 +30,33 @@ module.exports = class CoverageMap {
    * @return {Object} coverage map with all values set to zero
    */
   addContract(info, canonicalContractPath) {
-    this.coverage[canonicalContractPath] = {
-      l: {},
-      path: canonicalContractPath,
-      s: {},
-      b: {},
-      f: {},
-      fnMap: {},
-      statementMap: {},
-      branchMap: {},
-    };
+    if (canonicalContractPath.indexOf('Migrations') == -1 ) {
+      this.coverage[canonicalContractPath] = {
+        l: {},
+        path: canonicalContractPath,
+        s: {},
+        b: {},
+        f: {},
+        fnMap: {},
+        statementMap: {},
+        branchMap: {},
+      };
 
-    info.runnableLines.forEach((item, idx) => {
-      this.coverage[canonicalContractPath].l[info.runnableLines[idx]] = 0;
-    });
-    this.coverage[canonicalContractPath].fnMap = info.fnMap;
-    for (let x = 1; x <= Object.keys(info.fnMap).length; x++) {
-      this.coverage[canonicalContractPath].f[x] = 0;
-    }
-    this.coverage[canonicalContractPath].branchMap = info.branchMap;
-    for (let x = 1; x <= Object.keys(info.branchMap).length; x++) {
-      this.coverage[canonicalContractPath].b[x] = [0, 0];
-    }
-    this.coverage[canonicalContractPath].statementMap = info.statementMap;
-    for (let x = 1; x <= Object.keys(info.statementMap).length; x++) {
-      this.coverage[canonicalContractPath].s[x] = 0;
+      info.runnableLines.forEach((item, idx) => {
+        this.coverage[canonicalContractPath].l[info.runnableLines[idx]] = 0;
+      });
+      this.coverage[canonicalContractPath].fnMap = info.fnMap;
+      for (let x = 1; x <= Object.keys(info.fnMap).length; x++) {
+        this.coverage[canonicalContractPath].f[x] = 0;
+      }
+      this.coverage[canonicalContractPath].branchMap = info.branchMap;
+      for (let x = 1; x <= Object.keys(info.branchMap).length; x++) {
+        this.coverage[canonicalContractPath].b[x] = [0, 0];
+      }
+      this.coverage[canonicalContractPath].statementMap = info.statementMap;
+      for (let x = 1; x <= Object.keys(info.statementMap).length; x++) {
+        this.coverage[canonicalContractPath].s[x] = 0;
+      }
     }
   }
 
@@ -71,19 +73,27 @@ module.exports = class CoverageMap {
       if (event.topics.indexOf(lineTopic) >= 0) {
         const data = SolidityCoder.decodeParams(['string', 'uint256'], event.data.replace('0x', ''));
         const canonicalContractPath = data[0];
-        this.coverage[canonicalContractPath].l[data[1].toNumber()] += 1;
+        if (canonicalContractPath.indexOf('Migrations') == -1 ) {
+          this.coverage[canonicalContractPath].l[data[1].toNumber()] += 1;
+        }
       } else if (event.topics.indexOf(functionTopic) >= 0) {
         const data = SolidityCoder.decodeParams(['string', 'uint256'], event.data.replace('0x', ''));
         const canonicalContractPath = data[0];
-        this.coverage[canonicalContractPath].f[data[1].toNumber()] += 1;
+        if (canonicalContractPath.indexOf('Migrations') == -1 ) {
+          this.coverage[canonicalContractPath].f[data[1].toNumber()] += 1;
+        }
       } else if (event.topics.indexOf(branchTopic) >= 0) {
         const data = SolidityCoder.decodeParams(['string', 'uint256', 'uint256'], event.data.replace('0x', ''));
         const canonicalContractPath = data[0];
-        this.coverage[canonicalContractPath].b[data[1].toNumber()][data[2].toNumber()] += 1;
+        if (canonicalContractPath.indexOf('Migrations') == -1 ) {
+          this.coverage[canonicalContractPath].b[data[1].toNumber()][data[2].toNumber()] += 1;
+        }
       } else if (event.topics.indexOf(statementTopic) >= 0) {
         const data = SolidityCoder.decodeParams(['string', 'uint256'], event.data.replace('0x', ''));
         const canonicalContractPath = data[0];
-        this.coverage[canonicalContractPath].s[data[1].toNumber()] += 1;
+        if (canonicalContractPath.indexOf('Migrations') == -1 ) {
+          this.coverage[canonicalContractPath].s[data[1].toNumber()] += 1;
+        }
       }
     }
     return Object.assign({}, this.coverage);
