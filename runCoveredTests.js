@@ -45,7 +45,14 @@ shell.ls('./../originalContracts/**/*.sol').forEach(file => {
 shell.cp('./../originalContracts/Migrations.sol', './../contracts/Migrations.sol');
 
 shell.rm('./allFiredEvents'); // Delete previous results
-shell.exec('truffle test --network test');
+// shell.exec('truffle test --network test');
+// running a local version of truffle, with solc@0.4.4
+// to install and then modify solc version: cd into the solcover dir then:
+// 1. npm i truffle
+// 2. cd solcover/node_modules/truffle-compile 
+// 3. change to 0.4.4 in package.json
+// 4. npm install
+shell.exec('./node_modules/truffle/cli.js test --network test');
 
 const events = fs.readFileSync('./allFiredEvents').toString().split('\n');
 events.pop();
