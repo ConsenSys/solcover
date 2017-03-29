@@ -1,4 +1,4 @@
 allFiredEvents
-coverage.json
-coverage/
+#coverage.json
+#coverage/
 node_modules/
