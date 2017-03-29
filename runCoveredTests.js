@@ -17,7 +17,7 @@ if (!shell.test('-e', './node_modules/ethereumjs-vm/lib/opFns.js.orig')) {
   shell.exec('patch -b ./node_modules/ethereumjs-vm/lib/opFns.js ./hookIntoEvents.patch');
 }
 // Run the modified testrpc with large block limit
-const testrpcProcess = childprocess.exec('./node_modules/ethereumjs-testrpc/bin/testrpc --gasLimit 0xfffffffffffff --gasPrice 0x1');
+const testrpcProcess = childprocess.exec('./node_modules/ethereumjs-testrpc/bin/testrpc --gasLimit 0xfffffffffffff --gasPrice 0x1 --accounts 25');
 
 if (shell.test('-d', '../originalContracts')) {
   console.log('There is already an "originalContracts" directory in your truffle directory.\n' +
